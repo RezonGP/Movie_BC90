@@ -2,8 +2,6 @@ import Header from "../_component/layouts/Header";
 import Footer from "../_component/layouts/Footer";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-import type { RootState } from "../../../store";
 
 const Ticket = () => {
     const navigate = useNavigate();
