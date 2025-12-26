@@ -99,7 +99,7 @@ export default function Header() {
                                 </button>
                             )}
                             {user ? (
-                                <button onClick={handleLogout} className="text-warning-soft w-full text-left px-4 py-3 hover:bg-zinc-700 text-sm text-red-400">
+                                <button onClick={handleLogout} className=" w-full text-left px-4 py-3 hover:bg-zinc-700 text-sm text-red-400">
                                     Đăng xuất
                                 </button>
                             ) : (

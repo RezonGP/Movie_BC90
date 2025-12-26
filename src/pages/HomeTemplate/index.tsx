@@ -14,7 +14,7 @@ const HomeTemplate = () => {
     const { data: banners } = useSelector((state: RootState) => state.bannerReducer);
     const { data: movies } = useSelector((state: RootState) => state.movieReducer);
     const [currentBannerIndex, setCurrentBannerIndex] = useState(0);
-    const [bannerOpacity, setBannerOpacity] = useState(1);
+    const [_, setBannerOpacity] = useState(1);
     const navigate = useNavigate();
 
 

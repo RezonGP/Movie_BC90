@@ -11,7 +11,7 @@ export default function AdminTemplate() {
     const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
     const user = useSelector((state: RootState) => state.authReducer.user);
-    const { data: movies, loading } = useSelector((state: RootState) => state.movieReducer);
+    const { data: movies } = useSelector((state: RootState) => state.movieReducer);
     const movieError = useSelector((state: RootState) => state.movieReducer.error);
     const [editingMovie, setEditingMovie] = useState<TMovie | null>(null);
     const [formData, setFormData] = useState({
