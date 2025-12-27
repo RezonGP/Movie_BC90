@@ -1,19 +1,21 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import type { RootState, AppDispatch } from '../../store';
 import { fetchMovies, addMovie, updateMovie, deleteMovie } from '../HomeTemplate/Movie/slice';
 import Header from '../HomeTemplate/_component/layouts/Header';
 import Footer from '../HomeTemplate/_component/layouts/Footer';
 import type { TMovie } from '../HomeTemplate/types';
+import { actLogout } from '../HomeTemplate/Auth/slice';
 
 export default function AdminTemplate() {
     const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
-    const user = useSelector((state: RootState) => state.authReducer.user);
+    const user = useSelector((state: RootState) => state.authReducer.data!);
     const { data: movies } = useSelector((state: RootState) => state.movieReducer);
     const movieError = useSelector((state: RootState) => state.movieReducer.error);
     const [editingMovie, setEditingMovie] = useState<TMovie | null>(null);
+    const { data } = useSelector((state: RootState) => state.authReducer);
     const [formData, setFormData] = useState({
         tenPhim: '',
         trailer: '',
@@ -27,12 +29,16 @@ export default function AdminTemplate() {
     });
 
     useEffect(() => {
-        if (!user || user.maLoaiNguoiDung !== 'QuanTri') {
-            navigate('/');
-        } else {
-            dispatch(fetchMovies());
+
+        if (user.maLoaiNguoiDung !== "QuanTri") {
+            navigate("/");
+            return;
         }
-    }, [user, navigate, dispatch]);
+
+        dispatch(fetchMovies());
+    }, [user, dispatch, navigate]);
+
+
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -90,13 +96,18 @@ export default function AdminTemplate() {
         }
     };
 
+    if (!data) {
+        return <Navigate to="/auth" replace />;
+    }
     return (
         <div>
             <Header />
             <main className="min-h-screen bg-zinc-900 text-white">
                 <div className="max-w-7xl mx-auto px-6 py-8">
                     <h1 className="text-3xl font-bold mb-8">Quản Lý Phim</h1>
-
+                    <button onClick={() => { dispatch(actLogout()) }} className=" w-full text-left px-4 py-3 hover:bg-zinc-700 text-sm text-red-400">
+                        Đăng xuất
+                    </button>
                     <form onSubmit={handleSubmit} className="bg-zinc-800 p-6 rounded-lg mb-8">
                         <h2 className="text-xl font-semibold mb-4">{editingMovie ? 'Cập Nhật Phim' : 'Thêm Phim Mới'}</h2>
                         {movieError && <p className="text-red-500 mb-4">Lỗi: {movieError.message}</p>}
@@ -209,6 +220,7 @@ export default function AdminTemplate() {
                     </div>
                 </div>
             </main>
+
             <Footer />
         </div>
     );

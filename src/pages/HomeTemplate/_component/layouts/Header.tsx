@@ -1,16 +1,14 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
-import { logout } from './../../Auth/slice';
 import type { RootState, AppDispatch } from '../../../../store';
-
+import { actLogout } from '../../../HomeTemplate/Auth/slice';
 export default function Header() {
     const [open, setOpen] = useState(false);
     const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
-    const user = useSelector((state: RootState) => state.authReducer.user);
 
-
+    const { data } = useSelector((state: RootState) => state.authReducer);
 
     const handleBookTicket = () => {
         if (localStorage.getItem('token')) {
@@ -21,16 +19,15 @@ export default function Header() {
     };
 
     const handleAccount = () => {
-        if (!user) {
+        if (!data) {
             navigate('/auth');
         }
         // Nếu đã đăng nhập, có thể thêm logic chuyển đến trang tài khoản
     };
 
-    const handleLogout = () => {
-        dispatch(logout());
-        navigate('/');
-    };
+
+
+
 
     return (
         <header className="sticky top-0 z-50 bg-zinc-900/90 backdrop-blur border-b border-white/10 bg-[url('https://flowbite.s3.amazonaws.com/docs/jumbotron/conference.jpg')] ">
@@ -93,13 +90,8 @@ export default function Header() {
                             <button onClick={handleBookTicket} className="text-warning-soft w-full text-left px-4 py-3 hover:bg-zinc-700 text-sm">
                                 Lịch sử đặt vé
                             </button>
-                            {user?.maLoaiNguoiDung === 'QuanTri' && (
-                                <button onClick={() => navigate('/admin')} className="w-full text-left px-4 py-3 hover:bg-zinc-700 text-sm">
-                                    Admin
-                                </button>
-                            )}
-                            {user ? (
-                                <button onClick={handleLogout} className=" w-full text-left px-4 py-3 hover:bg-zinc-700 text-sm text-red-400">
+                            {data ? (
+                                <button onClick={() => { dispatch(actLogout()) }} className=" w-full text-left px-4 py-3 hover:bg-zinc-700 text-sm text-red-400">
                                     Đăng xuất
                                 </button>
                             ) : (

@@ -2,6 +2,9 @@ import { AxiosError } from "axios";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { api } from "../../services/api";
 
+
+
+
 export type InitState<T> = {
     loading: boolean;
     data: T | null;
@@ -26,11 +29,11 @@ export type TMovie = {
 export type TUser = {
     key?: string;
     taiKhoan: string;
-    hoTen: string;
-    email: string;
-    soDT: string;
+    hoTen?: string;
+    email?: string;
+    soDT?: string;
     matKhau: string;
-    maLoaiNguoiDung: string;
+    maLoaiNguoiDung?: string;
 };
 
 export type TBanner = {
@@ -61,13 +64,13 @@ export interface User {
 }
 
 export interface AuthState {
-    user: User | null;
+    data: User | null;
     loading: boolean;
     error: string | null;
 }
 
 const initialState: AuthState = {
-    user: (() => {
+    data: (() => {
         const storedUser = localStorage.getItem("USER_ADMIN");
         return storedUser ? JSON.parse(storedUser) : null;
     })(),
@@ -91,11 +94,11 @@ const authSlice = createSlice({
     initialState,
     reducers: {
         logout: (state) => {
-            state.user = null;
+            state.data = null;
             localStorage.removeItem("USER_ADMIN");
         },
         setUser: (state, action) => {
-            state.user = action.payload;
+            state.data = action.payload;
         },
     },
     extraReducers: (builder) => {
@@ -106,7 +109,7 @@ const authSlice = createSlice({
             })
             .addCase(login.fulfilled, (state, action) => {
                 state.loading = false;
-                state.user = action.payload;
+                state.data = action.payload;
                 localStorage.setItem("USER_ADMIN", JSON.stringify(action.payload));
             })
             .addCase(login.rejected, (state, action) => {

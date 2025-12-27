@@ -1,71 +1,91 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { api } from "../../../services/api";
+import type { InitState, TApiResponse, TUser } from "../types";
+import { AxiosError } from "axios";
 
-interface User {
+/* ===== TYPE ===== */
+type Userlogin = {
     taiKhoan: string;
     hoTen: string;
     email: string;
     soDt: string;
     maNhom: string;
     maLoaiNguoiDung: string;
-    accessToken: string;
-}
+};
 
-interface AuthState {
-    user: User | null;
-    loading: boolean;
-    error: string | null;
-}
+/* ===== LOCAL STORAGE ===== */
+const userInfoString = localStorage.getItem("USER_ADMIN");
+const data: Userlogin | null = userInfoString
+    ? JSON.parse(userInfoString)
+    : null;
 
-const initialState: AuthState = {
-    user: (() => {
-        const storedUser = localStorage.getItem("USER_ADMIN");
-        return storedUser ? JSON.parse(storedUser) : null;
-    })(),
+/* ===== INITIAL STATE ===== */
+const initialState: InitState<Userlogin> = {
     loading: false,
+    data,
     error: null,
 };
 
-export const login = createAsyncThunk(
+/* ===== THUNK ===== */
+export const authService = createAsyncThunk(
     "auth/login",
-    async ({ taiKhoan, matKhau }: { taiKhoan: string; matKhau: string }) => {
-        const response = await api.post("QuanLyNguoiDung/DangNhap", {
-            taiKhoan,
-            matKhau,
-        });
-        return response.data.content;
+    async (user: TUser, { rejectWithValue }) => {
+        try {
+            const response = await api.post<TApiResponse<Userlogin>>(
+                "/QuanLyNguoiDung/DangNhap",
+                user
+            );
+
+            const roles = response.data.content;
+
+            // 👉 Chỉ admin mới lưu USER_ADMIN
+            if (roles.maLoaiNguoiDung === "QuanTri") {
+                localStorage.setItem(
+                    "USER_ADMIN",
+                    JSON.stringify(roles)
+                );
+            }
+
+            return roles;
+        } catch (error: any) {
+            return rejectWithValue("Đăng nhập thất bại");
+        }
     }
 );
 
+/* ===== SLICE ===== */
 const authSlice = createSlice({
     name: "auth",
     initialState,
     reducers: {
-        logout: (state) => {
-            state.user = null;
-            localStorage.removeItem("USER_ADMIN");
-        },
-        setUser: (state, action) => {
-            state.user = action.payload;
-        },
+        clearAuthState: (state) => {
+            state.loading = false;
+            state.data = null;
+            state.error = null;
+        }
     },
     extraReducers: (builder) => {
         builder
-            .addCase(login.pending, (state) => {
+            .addCase(authService.pending, (state) => {
                 state.loading = true;
                 state.error = null;
             })
-            .addCase(login.fulfilled, (state, action) => {
+            .addCase(authService.fulfilled, (state, action) => {
                 state.loading = false;
-                state.user = action.payload;
-                localStorage.setItem("USER_ADMIN", JSON.stringify(action.payload));
+                state.data = action.payload || null;
             })
-            .addCase(login.rejected, (state, action) => {
+            .addCase(authService.rejected, (state, action) => {
                 state.loading = false;
-                state.error = action.error.message || "Đăng nhập thất bại";
-            });
+                state.error = action.payload as AxiosError<any>;
+            })
     },
 });
 
-export const { logout, setUser } = authSlice.actions;
+export const actLogout = () => {
+    return (dispatch: any) => {
+        localStorage.removeItem("USER_ADMIN");
+        dispatch(authSlice.actions.clearAuthState());
+    }
+}
+
 export default authSlice.reducer;
