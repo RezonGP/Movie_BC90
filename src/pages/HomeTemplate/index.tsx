@@ -28,11 +28,7 @@ const HomeTemplate = () => {
         }, [dispatch]);
 
         const handleBookTicket = () => {
-            if (localStorage.getItem('token')) {
-                navigate('/ticket');
-            } else {
-                navigate('/auth');
-            }
+            navigate('/ticket');
         };
 
         useEffect(() => {
@@ -95,7 +91,7 @@ const HomeTemplate = () => {
                                         <h3 className="text-xl font-semibold text-white mb-2">{movie.tenPhim}</h3>
                                         <div className="flex items-center justify-between">
                                             <span className="text-yellow-400 text-lg">⭐ {movie.danhGia}</span>
-                                            <button className="bg-orange-500 hover:bg-orange-600 px-6 py-2 rounded font-medium">
+                                            <button className="bg-orange-500 hover:bg-orange-600 px-6 py-2 rounded font-medium" onClick={handleBookTicket}>
                                                 Đặt vé
                                             </button>
                                         </div>

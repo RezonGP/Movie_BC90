@@ -6,7 +6,6 @@ import { fetchMovies, addMovie, updateMovie, deleteMovie } from '../HomeTemplate
 import Header from '../HomeTemplate/_component/layouts/Header';
 import Footer from '../HomeTemplate/_component/layouts/Footer';
 import type { TMovie } from '../HomeTemplate/types';
-import { actLogout } from '../HomeTemplate/Auth/slice';
 
 export default function AdminTemplate() {
     const navigate = useNavigate();
@@ -96,6 +95,7 @@ export default function AdminTemplate() {
         }
     };
 
+
     if (!data) {
         return <Navigate to="/auth" replace />;
     }
@@ -104,10 +104,8 @@ export default function AdminTemplate() {
             <Header />
             <main className="min-h-screen bg-zinc-900 text-white">
                 <div className="max-w-7xl mx-auto px-6 py-8">
+
                     <h1 className="text-3xl font-bold mb-8">Quản Lý Phim</h1>
-                    <button onClick={() => { dispatch(actLogout()) }} className=" w-full text-left px-4 py-3 hover:bg-zinc-700 text-sm text-red-400">
-                        Đăng xuất
-                    </button>
                     <form onSubmit={handleSubmit} className="bg-zinc-800 p-6 rounded-lg mb-8">
                         <h2 className="text-xl font-semibold mb-4">{editingMovie ? 'Cập Nhật Phim' : 'Thêm Phim Mới'}</h2>
                         {movieError && <p className="text-red-500 mb-4">Lỗi: {movieError.message}</p>}

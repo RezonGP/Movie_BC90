@@ -11,7 +11,7 @@ export default function Header() {
     const { data } = useSelector((state: RootState) => state.authReducer);
 
     const handleBookTicket = () => {
-        if (localStorage.getItem('token')) {
+        if (data) {
             navigate('/ticket');
         } else {
             navigate('/auth');
@@ -24,6 +24,12 @@ export default function Header() {
         }
         // Nếu đã đăng nhập, có thể thêm logic chuyển đến trang tài khoản
     };
+    const handleLogout = () => {
+        dispatch(actLogout());
+        navigate('/auth', { replace: true });
+        window.location.href = "/";
+
+    }
 
 
 
@@ -48,6 +54,11 @@ export default function Header() {
 
                 {/* MENU */}
                 <nav className="hidden md:flex items-center gap-8 text-sm font-medium">
+                    {data?.maLoaiNguoiDung === "QuanTri" && (
+                        <NavLink className="text-gray-200   hover:text-orange-400" to="/admin">
+                            admin
+                        </NavLink>
+                    )}
                     <NavLink className="text-gray-200   hover:text-orange-400" to="/">
                         Trang chủ
                     </NavLink>
@@ -91,7 +102,7 @@ export default function Header() {
                                 Lịch sử đặt vé
                             </button>
                             {data ? (
-                                <button onClick={() => { dispatch(actLogout()) }} className=" w-full text-left px-4 py-3 hover:bg-zinc-700 text-sm text-red-400">
+                                <button onClick={handleLogout} className=" w-full text-left px-4 py-3 hover:bg-zinc-700 text-sm text-red-400">
                                     Đăng xuất
                                 </button>
                             ) : (

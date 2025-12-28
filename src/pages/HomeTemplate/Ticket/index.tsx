@@ -7,10 +7,13 @@ const Ticket = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (!localStorage.getItem('token')) {
-            navigate('/auth');
+        const user = localStorage.getItem('USER_ADMIN');
+        if (!user) {
+            navigate('/auth', { replace: true });
         }
     }, [navigate]);
+
+
     return (
         <div>
             <Header />
