@@ -1,6 +1,6 @@
 import { AxiosError } from "axios";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { api } from "../../services/api";
+import { api } from "../../../services/api";
 
 
 
@@ -10,6 +10,13 @@ export type InitState<T> = {
     data: T | null;
     error: AxiosError<any> | null;
 };
+
+export type MovieDetailState = {
+    detail: TMovie | null;
+    schedule: any | null;
+};
+
+
 
 export type TMovie = {
     maPhim: number;
@@ -27,13 +34,14 @@ export type TMovie = {
 };
 
 export type TUser = {
-    key?: string;
     taiKhoan: string;
-    hoTen?: string;
+    matKhau: string;
     email?: string;
     soDT?: string;
-    matKhau: string;
-    maLoaiNguoiDung?: string;
+    maNhom?: string;
+    hoTen?: string;
+    maLoaiNguoiDung?: "QuanTri" | "KhachHang";
+    accessToken?: string;
 };
 
 export type TBanner = {

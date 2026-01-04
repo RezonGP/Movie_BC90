@@ -5,7 +5,7 @@ import type { RootState, AppDispatch } from '../../store';
 import { fetchMovies, addMovie, updateMovie, deleteMovie } from '../HomeTemplate/Movie/slice';
 import Header from '../HomeTemplate/_component/layouts/Header';
 import Footer from '../HomeTemplate/_component/layouts/Footer';
-import type { TMovie } from '../HomeTemplate/types';
+import type { TMovie } from '../HomeTemplate/types/types';
 
 export default function AdminTemplate() {
     const navigate = useNavigate();

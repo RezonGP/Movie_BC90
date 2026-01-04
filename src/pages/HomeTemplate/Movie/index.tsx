@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import type { RootState, AppDispatch } from "../../../store";
 import { useEffect } from "react";
 import { fetchMovies } from "./slice";
-import type { TMovie } from "../types";
+import type { TMovie } from "../types/types";
 import MovieSkeleton from "../_component/MovieSkeleton";
 
 const Movie = () => {
@@ -15,13 +15,7 @@ const Movie = () => {
         (state: RootState) => state.movieReducer
     );
 
-    const handleBookTicket = () => {
-        if (localStorage.getItem('token')) {
-            navigate('/ticket');
-        } else {
-            navigate('/auth');
-        }
-    };
+
 
     useEffect(() => {
         dispatch(fetchMovies());
@@ -71,7 +65,7 @@ const Movie = () => {
                                         <span className="text-yellow-400">
                                             ⭐ {movie.danhGia}
                                         </span>
-                                        <button onClick={handleBookTicket} className="bg-orange-500 hover:bg-orange-600 px-4 py-2 rounded text-sm font-medium">
+                                        <button onClick={() => navigate(`/ticket/${movie.maPhim}`)} className="bg-orange-500 hover:bg-orange-600 px-4 py-2 rounded text-sm font-medium">
                                             Đặt vé
                                         </button>
                                     </div>

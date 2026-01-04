@@ -32,7 +32,7 @@ const routes: Route[] = [
         element: lazy(() => import("../pages/HomeTemplate/Movie")),
     },
     {
-        path: "/ticket",
+        path: "ticket/:movieId",
         element: lazy(() => import("../pages/HomeTemplate/Ticket")),
     },
 ]

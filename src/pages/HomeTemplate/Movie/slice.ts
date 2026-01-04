@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import type { InitState, TMovie, TApiResponse } from "../types";
+import type { InitState, TMovie, TApiResponse } from "../types/types";
 import { api } from "./../../../services/api"
 import { AxiosError } from "axios";
 import axios from "axios";

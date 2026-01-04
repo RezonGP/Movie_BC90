@@ -1,7 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import movieReducer from "./../pages/HomeTemplate/Movie/slice"
 import bannerReducer from "./../pages/HomeTemplate/slice"
-import { authReducer } from "../pages/HomeTemplate/types";
+import { authReducer } from "../pages/HomeTemplate/types/types";
 
 
 

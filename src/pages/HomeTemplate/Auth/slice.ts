@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { api } from "../../../services/api";
-import type { InitState, TApiResponse, TUser } from "../types";
+import type { InitState, TApiResponse, TUser } from "../types/types";
 import { AxiosError } from "axios";
 
 /* ===== TYPE ===== */
@@ -86,6 +86,7 @@ export const actLogout = () => {
         localStorage.removeItem("USER_ADMIN");
         dispatch(authSlice.actions.clearAuthState());
     }
+
 }
 
 export default authSlice.reducer;

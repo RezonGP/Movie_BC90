@@ -68,9 +68,7 @@ export default function Header() {
                     <NavLink className="text-gray-200 hover:text-orange-400" to="/cinema">
                         Rạp
                     </NavLink>
-                    <button onClick={handleBookTicket} className="text-gray-200 hover:text-orange-400">
-                        Vé
-                    </button>
+
                 </nav>
 
                 {/* RIGHT */}
