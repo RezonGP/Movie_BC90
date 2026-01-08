@@ -1,26 +1,61 @@
 import Header from "../_component/layouts/Header";
 import Footer from "../_component/layouts/Footer";
-import { Navigate } from "react-router-dom";
-
+import { Navigate, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { api } from "../../../services/api";
 
 export default function Ticket() {
-    const user = JSON.parse(
-        localStorage.getItem("USER_ADMIN") || "null"
-    );
+    const { movieId } = useParams();
+    const [movieDetail, setMovieDetail] = useState<any>(null);
+
+    const user = JSON.parse(localStorage.getItem("USER_ADMIN") || "null");
     if (!user) return <Navigate to="/auth" />;
 
+    useEffect(() => {
+        if (!movieId) return;
+
+        api
+            .get(`/QuanLyPhim/LayThongTinPhim?MaPhim=${movieId}`)
+            .then(res => {
+                setMovieDetail(res.data.content);
+            })
+            .catch(err => {
+                console.error("API ERROR:", err);
+            });
+    }, [movieId]);
+
+    // ✅ LOADING STATE
+    if (!movieDetail) {
+        return (
+            <>
+                <Header />
+                <div className="min-h-screen bg-zinc-900 text-white flex items-center justify-center">
+                    Đang tải thông tin phim...
+                </div>
+                <Footer />
+            </>
+        );
+    }
 
 
 
+    // ✅ MAIN UI (movieDetail ĐÃ CÓ)
     return (
         <div>
-            <div className="min-h-screen bg-zinc-900 text-white">
-                <Header />
-                {/* Content */}
-                <main className="max-w-6xl mx-auto p-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <Header />
 
-                    {/* Khu vực chọn ghế */}
-                    <section className="lg:col-span-2 bg-zinc-800 p-6 rounded-lg">
+            <div
+                className="min-h-screen bg-cover bg-center relative text-white"
+                style={{
+                    backgroundImage: `url(${movieDetail.hinhAnh})`,
+                }}
+            >
+                {/* Overlay */}
+                <div className="absolute inset-0 bg-black bg-opacity-70"></div>
+
+                <main className="relative max-w-6xl mx-auto p-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    {/* CHỌN GHẾ */}
+                    <section className="lg:col-span-2 bg-zinc-800/90 p-6 rounded-lg">
                         <h2 className="text-lg font-semibold mb-4">Chọn Ghế</h2>
 
                         <div className="grid grid-cols-10 gap-2">
@@ -33,53 +68,35 @@ export default function Ticket() {
                                 </div>
                             ))}
                         </div>
-
-                        <div className="mt-6 flex gap-4 text-sm">
-                            <div className="flex items-center gap-2">
-                                <span className="w-4 h-4 bg-zinc-700 block rounded"></span>
-                                Ghế trống
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <span className="w-4 h-4 bg-orange-500 block rounded"></span>
-                                Ghế đang chọn
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <span className="w-4 h-4 bg-red-500 block rounded"></span>
-                                Ghế đã đặt
-                            </div>
-                        </div>
                     </section>
 
-                    {/* Thông tin vé */}
-                    <aside className="bg-zinc-800 p-6 rounded-lg">
-                        <h2 className="text-lg font-semibold mb-4">
-                            Thông Tin Vé
-                        </h2>
+                    {/* THÔNG TIN VÉ */}
+                    <aside className="bg-zinc-800/90 p-6 rounded-lg">
+                        <h2 className="text-lg font-semibold mb-4">Thông Tin Vé</h2>
 
                         <div className="space-y-3 text-sm">
-                            <p><span className="text-gray-400">Phim:</span> Avengers: Endgame</p>
-                            <p><span className="text-gray-400">Rạp:</span> CGV Vincom</p>
-                            <p><span className="text-gray-400">Suất chiếu:</span> 19:30 - 01/01/2026</p>
-                            <p><span className="text-gray-400">Ghế:</span> A1, A2, A3</p>
-                            <p className="text-lg font-bold text-orange-400">
-                                Tổng tiền: 225.000đ
+                            <p>
+                                <span className="text-gray-400">Phim:</span>{" "}
+                                {movieDetail.tenPhim}
+                            </p>
+                            <p>
+                                <span className="text-gray-400">Đánh giá:</span>{" "}
+                                ⭐ {movieDetail.danhGia}
+                            </p>
+                            <p>
+                                <span className="text-gray-400">Thời lượng:</span>{" "}
+                                {movieDetail.thoiLuong} phút
                             </p>
                         </div>
 
-                        <button
-                            className="w-full mt-6 bg-orange-500 hover:bg-orange-600 py-3 rounded font-semibold"
-                        >
+                        <button className="w-full mt-6 bg-orange-500 hover:bg-orange-600 py-3 rounded font-semibold">
                             Đặt Vé
                         </button>
                     </aside>
                 </main>
-
-
             </div>
+
             <Footer />
         </div>
     );
-};
-
-
-
+}

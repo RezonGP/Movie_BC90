@@ -2,10 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import type { RootState, AppDispatch } from '../../store';
-import { fetchMovies, addMovie, updateMovie, deleteMovie } from '../HomeTemplate/Movie/slice';
+import { fetchMovies, updateMovie } from '../HomeTemplate/Movie/slice';
 import Header from '../HomeTemplate/_component/layouts/Header';
 import Footer from '../HomeTemplate/_component/layouts/Footer';
 import type { TMovie } from '../HomeTemplate/types/types';
+import { deleteMovie, addMovie } from './types/slice';
 
 export default function AdminTemplate() {
     const navigate = useNavigate();
@@ -90,7 +91,7 @@ export default function AdminTemplate() {
     };
 
     const handleDelete = (maPhim: number) => {
-        if (window.confirm('Bạn có chắc muốn xóa phim này?')) {
+        if (window.confirm('Bạn có chắc chắn muốn xóa phim có mã ' + maPhim + ' không?')) {
             dispatch(deleteMovie(maPhim));
         }
     };
