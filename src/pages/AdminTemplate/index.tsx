@@ -17,15 +17,18 @@ export default function AdminTemplate() {
     const [editingMovie, setEditingMovie] = useState<TMovie | null>(null);
     const { data } = useSelector((state: RootState) => state.authReducer);
     const [formData, setFormData] = useState({
+        maPhim: '',
         tenPhim: '',
+        biDanh: '',
         trailer: '',
-        moTa: '',
-        ngayKhoiChieu: '',
-        dangChieu: false,
-        sapChieu: false,
-        hot: false,
-        danhGia: 0,
         hinhAnh: '',
+        moTa: '',
+        maNhom: '',
+        ngayKhoiChieu: '',
+        danhGia: 0,
+        hot: false,
+        dangChieu: false,
+        sapChieu: false
     });
 
     useEffect(() => {
@@ -62,15 +65,18 @@ export default function AdminTemplate() {
 
     const resetForm = () => {
         setFormData({
+            maPhim: '',
             tenPhim: '',
+            biDanh: '',
             trailer: '',
-            moTa: '',
-            ngayKhoiChieu: '',
-            dangChieu: false,
-            sapChieu: false,
-            hot: false,
-            danhGia: 0,
             hinhAnh: '',
+            moTa: '',
+            maNhom: '',
+            ngayKhoiChieu: '',
+            danhGia: 0,
+            hot: false,
+            dangChieu: false,
+            sapChieu: false
         });
         setEditingMovie(null);
     };
@@ -78,15 +84,18 @@ export default function AdminTemplate() {
     const handleEdit = (movie: TMovie) => {
         setEditingMovie(movie);
         setFormData({
+            maPhim: movie.maPhim.toString(),
             tenPhim: movie.tenPhim,
+            biDanh: movie.biDanh,
             trailer: movie.trailer,
-            moTa: movie.moTa,
-            ngayKhoiChieu: movie.ngayKhoiChieu,
-            dangChieu: movie.dangChieu,
-            sapChieu: movie.sapChieu,
-            hot: movie.hot,
-            danhGia: movie.danhGia,
             hinhAnh: movie.hinhAnh,
+            moTa: movie.moTa,
+            maNhom: movie.maNhom,
+            ngayKhoiChieu: movie.ngayKhoiChieu,
+            danhGia: movie.danhGia,
+            hot: movie.hot,
+            dangChieu: movie.dangChieu,
+            sapChieu: movie.sapChieu
         });
     };
 

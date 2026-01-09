@@ -25,13 +25,12 @@ export const deleteMovie = createAsyncThunk(
     'movie/deleteMovie',
     async (maPhim: number, { dispatch, rejectWithValue }) => {
         try {
-            await api.delete(`QuanLyPhim/XoaPhim?MaPhim=${maPhim}`);
+            const response = await api.delete(`QuanLyPhim/XoaPhim?MaPhim=${maPhim}`);
             alert('Xóa phim thành công!');
             dispatch(fetchMovies());
-            return maPhim;
-        } catch (error: any) {
-            alert(error.response?.data?.content || 'Xóa phim thất bại');
-            return rejectWithValue(error.response.data);
+            return response.data.content;
+        } catch (error) {
+            return rejectWithValue(error);
         }
     }
 );
@@ -40,13 +39,15 @@ export const addMovie = createAsyncThunk(
     'movie/addMovie',
     async (formData: FormData, { dispatch, rejectWithValue }) => {
         try {
-            // Sửa endpoint: ThemPhimUploadHinh
-            await api.post('QuanLyPhim/ThemPhimUploadHinh', formData);
+            const response = await api.post('QuanLyPhim/ThemPhimUploadHinh', formData);
             alert('Thêm phim thành công!');
             dispatch(fetchMovies());
-            return;
+            return response.data.content;
         } catch (error: any) {
-            return rejectWithValue(error.response.data);
+            // Hiển thị lỗi chi tiết từ Server để debug (ví dụ: "Ngày tháng sai định dạng")
+            const errorMsg = error.response?.data?.content || "Lỗi hệ thống (500)";
+            alert(errorMsg);
+            return rejectWithValue(errorMsg);
         }
     }
 );
