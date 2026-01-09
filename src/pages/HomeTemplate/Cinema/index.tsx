@@ -1,20 +1,53 @@
+import { useEffect } from "react";
 import Header from "../_component/layouts/Header";
 import Footer from "../_component/layouts/Footer";
+import type { CinemaSystem } from "../types";
+import { useDispatch, useSelector } from "react-redux";
+import type { AppDispatch, RootState } from "../../../store";
+import { fetchCinemaSystems } from "./types/slice";
 
 const Cinema = () => {
+    const dispatch = useDispatch<AppDispatch>();
+    const { data: cinema, loading } = useSelector(
+        (state: RootState) => state.cinnemaReducer
+    );
+
+
+    useEffect(() => {
+        dispatch(fetchCinemaSystems());
+    }, [dispatch]);
     return (
         <div>
             <Header />
-            <main className="min-h-screen bg-[url('https://flowbite.s3.amazonaws.com/docs/jumbotron/conference.jpg')] bg-cover bg-center text-white relative">
-                <div className="absolute inset-0 bg-black bg-opacity-50"></div>
-                <div className="relative max-w-7xl mx-auto px-6 py-8">
-                    <h1 className="text-3xl font-bold mb-8">Rạp Chiếu Phim</h1>
-                    <p>Thông tin về các rạp chiếu phim sẽ được hiển thị ở đây.</p>
+            <main className="min-h-screen  bg-zinc-900 text-white px-6 py-8">
+                <h1 className="text-3xl font-bold mb-8">Hệ thống rạp chiếu phim</h1>
+
+                {loading && <p>Đang tải hệ thống rạp...</p>}
+
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6" >
+                    {cinema?.map((cinema: CinemaSystem) => (
+                        <div
+                            key={cinema.maHeThongRap}
+                            className="bg-zinc-600 rounded-2xl p-6 hover:bg-gray-700 transition"
+                        >
+                            <img
+                                src={cinema.logo}
+                                alt={cinema.tenHeThongRap}
+                                className="h-14 mb-4 bg-white p-2 rounded"
+                            />
+                            <h2 className="text-xl font-semibold">
+                                {cinema.tenHeThongRap}
+                            </h2>
+                            <p className="text-gray-400 text-sm">
+                                {cinema.biDanh}
+                            </p>
+                        </div>
+                    ))}
                 </div>
             </main>
             <Footer />
         </div>
     );
-};
+}
 
 export default Cinema;
