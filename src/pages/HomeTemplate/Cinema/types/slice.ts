@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
-import type { InitState, CinemaSystem, TApiResponse } from "../../types/types";
+import type { InitState, CinemaSystem, TApiResponse } from "../../types";
 import { api } from "../../../../services/api";
 
 const initialState: InitState<CinemaSystem[]> = {
