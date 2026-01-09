@@ -3,13 +3,15 @@ import Footer from "../_component/layouts/Footer";
 import { Navigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { api } from "../../../services/api";
+import type { TMovie } from "../types";
 
 export default function Ticket() {
     const { movieId } = useParams();
-    const [movieDetail, setMovieDetail] = useState<any>(null);
+    type MovieInfo = TMovie & { thoiLuong?: number };
+    const [movieDetail, setMovieDetail] = useState<MovieInfo | null>(null);
 
     const user = JSON.parse(localStorage.getItem("USER_ADMIN") || "null");
-    if (!user) return <Navigate to="/auth" />;
+    const unauthorized = !user;
 
     useEffect(() => {
         if (!movieId) return;
@@ -17,13 +19,14 @@ export default function Ticket() {
         api
             .get(`/QuanLyPhim/LayThongTinPhim?MaPhim=${movieId}`)
             .then(res => {
-                setMovieDetail(res.data.content);
+                setMovieDetail(res.data.content as MovieInfo);
             })
             .catch(err => {
                 console.error("API ERROR:", err);
             });
     }, [movieId]);
 
+    if (unauthorized) return <Navigate to="/auth" />;
     // ✅ LOADING STATE
     if (!movieDetail) {
         return (

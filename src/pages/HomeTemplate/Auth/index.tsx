@@ -5,7 +5,7 @@ import Header from "../_component/layouts/Header";
 import Footer from "../_component/layouts/Footer";
 
 import type { AppDispatch, RootState } from "../../../store";
-import type { TUser } from "./../types/types";
+import type { TUser } from "../types";
 import { authService } from "./slice";
 
 export default function Auth() {

@@ -20,10 +20,6 @@ const routes: Route[] = [
         element: lazy(() => import("../pages/HomeTemplate/Auth")),
     },
     {
-        path: "/admin",
-        element: lazy(() => import("../pages/AdminTemplate")),
-    },
-    {
         path: "/cinema",
         element: lazy(() => import("../pages/HomeTemplate/Cinema")),
     },

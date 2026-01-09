@@ -1,235 +1,40 @@
-import React, { useEffect, useState } from 'react';
-import { Navigate, useNavigate } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
-import type { RootState, AppDispatch } from '../../store';
-import { fetchMovies, updateMovie } from '../HomeTemplate/Movie/slice';
-import Header from '../HomeTemplate/_component/layouts/Header';
-import Footer from '../HomeTemplate/_component/layouts/Footer';
-import type { TMovie } from '../HomeTemplate/types/types';
-import { deleteMovie, addMovie } from './types/slice';
+import { useEffect } from 'react';
+import { NavLink, Navigate, Outlet, useLocation } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import type { RootState } from '../../store';
 
 export default function AdminTemplate() {
-    const navigate = useNavigate();
-    const dispatch = useDispatch<AppDispatch>();
-    const user = useSelector((state: RootState) => state.authReducer.data!);
-    const { data: movies } = useSelector((state: RootState) => state.movieReducer);
-    const movieError = useSelector((state: RootState) => state.movieReducer.error);
-    const [editingMovie, setEditingMovie] = useState<TMovie | null>(null);
     const { data } = useSelector((state: RootState) => state.authReducer);
-    const [formData, setFormData] = useState({
-        maPhim: '',
-        tenPhim: '',
-        biDanh: '',
-        trailer: '',
-        hinhAnh: '',
-        moTa: '',
-        maNhom: '',
-        ngayKhoiChieu: '',
-        danhGia: 0,
-        hot: false,
-        dangChieu: false,
-        sapChieu: false
-    });
+    const location = useLocation();
 
-    useEffect(() => {
-
-        if (user.maLoaiNguoiDung !== "QuanTri") {
-            navigate("/");
-            return;
-        }
-
-        dispatch(fetchMovies());
-    }, [user, dispatch, navigate]);
-
-
-
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        const data = new FormData();
-        Object.entries(formData).forEach(([key, value]) => {
-            if (value !== '') {
-                data.append(key, value.toString());
-            }
-        });
-        data.append('maNhom', 'GP02');
-
-        if (editingMovie) {
-            data.append('maPhim', editingMovie.maPhim.toString());
-            dispatch(updateMovie(data));
-        } else {
-            dispatch(addMovie(data));
-        }
-
-        resetForm();
-    };
-
-    const resetForm = () => {
-        setFormData({
-            maPhim: '',
-            tenPhim: '',
-            biDanh: '',
-            trailer: '',
-            hinhAnh: '',
-            moTa: '',
-            maNhom: '',
-            ngayKhoiChieu: '',
-            danhGia: 0,
-            hot: false,
-            dangChieu: false,
-            sapChieu: false
-        });
-        setEditingMovie(null);
-    };
-
-    const handleEdit = (movie: TMovie) => {
-        setEditingMovie(movie);
-        setFormData({
-            maPhim: movie.maPhim.toString(),
-            tenPhim: movie.tenPhim,
-            biDanh: movie.biDanh,
-            trailer: movie.trailer,
-            hinhAnh: movie.hinhAnh,
-            moTa: movie.moTa,
-            maNhom: movie.maNhom,
-            ngayKhoiChieu: movie.ngayKhoiChieu,
-            danhGia: movie.danhGia,
-            hot: movie.hot,
-            dangChieu: movie.dangChieu,
-            sapChieu: movie.sapChieu
-        });
-    };
-
-    const handleDelete = (maPhim: number) => {
-        if (window.confirm('Bạn có chắc chắn muốn xóa phim có mã ' + maPhim + ' không?')) {
-            dispatch(deleteMovie(maPhim));
-        }
-    };
-
-
+    useEffect(() => {}, [location.pathname]);
     if (!data) {
         return <Navigate to="/auth" replace />;
     }
+    if (data.maLoaiNguoiDung !== "QuanTri") {
+        return <Navigate to="/" replace />;
+    }
     return (
-        <div>
-            <Header />
-            <main className="min-h-screen bg-zinc-900 text-white">
-                <div className="max-w-7xl mx-auto px-6 py-8">
-
-                    <h1 className="text-3xl font-bold mb-8">Quản Lý Phim</h1>
-                    <form onSubmit={handleSubmit} className="bg-zinc-800 p-6 rounded-lg mb-8">
-                        <h2 className="text-xl font-semibold mb-4">{editingMovie ? 'Cập Nhật Phim' : 'Thêm Phim Mới'}</h2>
-                        {movieError && <p className="text-red-500 mb-4">Lỗi: {movieError.message}</p>}
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <input
-                                type="text"
-                                placeholder="Tên phim"
-                                value={formData.tenPhim}
-                                onChange={(e) => setFormData({ ...formData, tenPhim: e.target.value })}
-                                className="px-3 py-2 bg-zinc-700 rounded"
-                                required
-                            />
-                            <input
-                                type="text"
-                                placeholder="Trailer URL"
-                                value={formData.trailer}
-                                onChange={(e) => setFormData({ ...formData, trailer: e.target.value })}
-                                className="px-3 py-2 bg-zinc-700 rounded"
-                            />
-                            <input
-                                type="date"
-                                value={formData.ngayKhoiChieu}
-                                onChange={(e) => setFormData({ ...formData, ngayKhoiChieu: e.target.value })}
-                                className="px-3 py-2 bg-zinc-700 rounded"
-                                required
-                            />
-                            <input
-                                type="number"
-                                placeholder="Đánh giá"
-                                value={formData.danhGia}
-                                onChange={(e) => setFormData({ ...formData, danhGia: Number(e.target.value) })}
-                                className="px-3 py-2 bg-zinc-700 rounded"
-                                min="0"
-                                max="10"
-                            />
-                            <input
-                                type="text"
-                                placeholder="Hình ảnh URL"
-                                value={formData.hinhAnh}
-                                onChange={(e) => setFormData({ ...formData, hinhAnh: e.target.value })}
-                                className="px-3 py-2 bg-zinc-700 rounded"
-                            />
-                            <div className="flex items-center space-x-4">
-                                <label className="flex items-center">
-                                    <input
-                                        type="checkbox"
-                                        checked={formData.dangChieu}
-                                        onChange={(e) => setFormData({ ...formData, dangChieu: e.target.checked })}
-                                        className="mr-2"
-                                    />
-                                    Đang chiếu
-                                </label>
-                                <label className="flex items-center">
-                                    <input
-                                        type="checkbox"
-                                        checked={formData.sapChieu}
-                                        onChange={(e) => setFormData({ ...formData, sapChieu: e.target.checked })}
-                                        className="mr-2"
-                                    />
-                                    Sắp chiếu
-                                </label>
-                                <label className="flex items-center">
-                                    <input
-                                        type="checkbox"
-                                        checked={formData.hot}
-                                        onChange={(e) => setFormData({ ...formData, hot: e.target.checked })}
-                                        className="mr-2"
-                                    />
-                                    Hot
-                                </label>
-                            </div>
-                        </div>
-                        <textarea
-                            placeholder="Mô tả"
-                            value={formData.moTa}
-                            onChange={(e) => setFormData({ ...formData, moTa: e.target.value })}
-                            className="w-full px-3 py-2 bg-zinc-700 rounded mt-4"
-                            rows={3}
-                            required
-                        />
-                        <div className="flex gap-4 mt-4">
-                            <button type="submit" className="bg-orange-500 hover:bg-orange-600 px-6 py-2 rounded">
-                                {editingMovie ? 'Cập Nhật' : 'Thêm Phim'}
-                            </button>
-                            {editingMovie && (
-                                <button type="button" onClick={resetForm} className="bg-gray-500 hover:bg-gray-600 px-6 py-2 rounded">
-                                    Hủy
-                                </button>
-                            )}
-                        </div>
-                    </form>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {movies?.map((movie) => (
-                            <div key={movie.maPhim} className="bg-zinc-800 rounded-lg overflow-hidden">
-                                <img src={movie.hinhAnh} alt={movie.tenPhim} className="w-full h-48 object-cover" />
-                                <div className="p-4">
-                                    <h3 className="text-lg font-semibold mb-2">{movie.tenPhim}</h3>
-                                    <div className="flex gap-2">
-                                        <button onClick={() => handleEdit(movie)} className="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded text-sm">
-                                            Sửa
-                                        </button>
-                                        <button onClick={() => handleDelete(movie.maPhim)} className="bg-red-500 hover:bg-red-600 px-4 py-2 rounded text-sm">
-                                            Xóa
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
+        <div className="min-h-screen bg-gray-50 text-gray-900">
+            <div className="flex">
+                <aside className="w-64 bg-white border-r border-gray-200 min-h-screen">
+                    <div className="px-6 py-5 text-xl font-semibold">Admin</div>
+                    <nav className="px-2 space-y-1">
+                        <NavLink to="/admin/movies" className={({ isActive }) => `block px-4 py-2 rounded-lg ${isActive ? 'bg-blue-700 text-white' : 'text-gray-700 hover:bg-gray-100'}`}>Quản lý phim</NavLink>
+                        <NavLink to="/admin/users" className={({ isActive }) => `block px-4 py-2 rounded-lg ${isActive ? 'bg-blue-700 text-white' : 'text-gray-700 hover:bg-gray-100'}`}>Quản lý người dùng</NavLink>
+                        <NavLink to="/admin/theaters" className={({ isActive }) => `block px-4 py-2 rounded-lg ${isActive ? 'bg-blue-700 text-white' : 'text-gray-700 hover:bg-gray-100'}`}>Quản lý rạp</NavLink>
+                        <NavLink to="/admin/bookings" className={({ isActive }) => `block px-4 py-2 rounded-lg ${isActive ? 'bg-blue-700 text-white' : 'text-gray-700 hover:bg-gray-100'}`}>Quản lý đặt vé</NavLink>
+                    </nav>
+                </aside>
+                <main className="flex-1">
+                    <header className="bg-white border-b border-gray-200 px-6 py-4">
+                        <h1 className="text-2xl font-bold">Admin Dashboard</h1>
+                    </header>
+                    <div className="p-6">
+                        <Outlet />
                     </div>
-                </div>
-            </main>
-
-            <Footer />
+                </main>
+            </div>
         </div>
-    );
+    )
 }

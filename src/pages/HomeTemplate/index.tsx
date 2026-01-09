@@ -6,6 +6,7 @@ import { fetchBanner } from "./slice";
 import { fetchMovies } from "./Movie/slice";
 import type { RootState, AppDispatch } from "../../store";
 import { useNavigate } from "react-router-dom";
+import { IMAGE_URL } from "../../constants";
 
 
 const HomeTemplate = () => {
@@ -51,7 +52,7 @@ const HomeTemplate = () => {
 
         const getImageUrl = useCallback((url: string) => {
             if (url.startsWith('http')) return url;
-            return `https://movienew.cybersoft.edu.vn${url}`;
+            return `${IMAGE_URL}${url}`;
         }, []);
 
         const featuredMovies = useMemo(() => movies ? movies.filter(m => m.dangChieu).slice(0, 3) : [], [movies]);

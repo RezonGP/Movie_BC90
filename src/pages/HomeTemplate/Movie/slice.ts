@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import type { InitState, TMovie, TApiResponse } from "../types/types";
+import type { InitState, TMovie, TApiResponse } from "../types";
 import { api } from "./../../../services/api"
 import { AxiosError } from "axios";
 import axios from "axios";
@@ -14,10 +14,12 @@ const initialState: InitState<TMovie[]> = {
 
 
 
+import { IMAGE_URL } from "../../../constants";
+
 export const addMovie = createAsyncThunk(
     'movie/addMovie',
     async (formData: FormData) => {
-        const res = await axios.post('...', formData);
+        const res = await axios.post(`${IMAGE_URL}...`, formData);
         return res.data.content;
     }
 );
@@ -25,7 +27,7 @@ export const addMovie = createAsyncThunk(
 export const updateMovie = createAsyncThunk(
     'movie/updateMovie',
     async (formData: FormData) => {
-        const res = await axios.post('...', formData);
+        const res = await axios.post(`${IMAGE_URL}...`, formData);
         return res.data.content;
     }
 );
@@ -33,7 +35,7 @@ export const updateMovie = createAsyncThunk(
 export const deleteMovie = createAsyncThunk(
     'movie/deleteMovie',
     async (maPhim: number) => {
-        await axios.delete(`...?MaPhim=${maPhim}`);
+        await axios.delete(`${IMAGE_URL}...?MaPhim=${maPhim}`);
         return maPhim;
     }
 );
@@ -65,7 +67,7 @@ const movieSlice = createSlice({
             })
             .addCase(fetchMovies.rejected, (state, action) => {
                 state.loading = false;
-                state.error = action.payload as AxiosError<any>;
+                state.error = action.payload as AxiosError<unknown>;
             });
     }
 })
