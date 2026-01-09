@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import type { RootState, AppDispatch } from "../../../store";
 import { useEffect } from "react";
 import { fetchMovies } from "./slice";
-import type { TMovie } from "../types/types";
+import type { TMovie } from "../types";
 import MovieSkeleton from "../_component/MovieSkeleton";
 
 const Movie = () => {

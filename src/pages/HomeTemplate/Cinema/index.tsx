@@ -1,15 +1,17 @@
 import { useEffect } from "react";
 import Header from "../_component/layouts/Header";
 import Footer from "../_component/layouts/Footer";
-import type { CinemaSystem } from "../types/types";
 import { useDispatch, useSelector } from "react-redux";
-import type { AppDispatch, RootState } from "../../../store";
+import type { AppDispatch } from "../../../store";
+import type { RootState } from "@reduxjs/toolkit/query";
 import { fetchCinemaSystems } from "./types/slice";
+import type { CinemaSystem } from "../types";
+
 
 const Cinema = () => {
     const dispatch = useDispatch<AppDispatch>();
     const { data: cinema, loading } = useSelector(
-        (state: RootState) => state.cinnemaReducer
+        (state: any) => state.cinemaReducer
     );
 
 

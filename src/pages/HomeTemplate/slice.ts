@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import type { InitState, TBanner, TApiResponse } from "./types/types";
+import type { InitState, TBanner, TApiResponse } from "./types";
 import { api } from "./../../services/api"
 import { AxiosError } from "axios";
 
@@ -38,7 +38,7 @@ const bannerSlice = createSlice({
             })
             .addCase(fetchBanner.rejected, (state, action) => {
                 state.loading = false;
-                state.error = action.payload as AxiosError<any>;
+                state.error = action.payload as AxiosError<unknown>;
             });
     }
 })

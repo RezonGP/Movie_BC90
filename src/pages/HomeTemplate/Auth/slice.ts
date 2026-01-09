@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { api } from "../../../services/api";
-import type { InitState, TApiResponse, TUser } from "../types/types";
+import type { InitState, TApiResponse, TUser } from "../types";
 import { AxiosError } from "axios";
 
 /* ===== TYPE ===== */
@@ -47,7 +47,7 @@ export const authService = createAsyncThunk(
             }
 
             return roles;
-        } catch (error: any) {
+        } catch {
             return rejectWithValue("Đăng nhập thất bại");
         }
     }
@@ -76,13 +76,13 @@ const authSlice = createSlice({
             })
             .addCase(authService.rejected, (state, action) => {
                 state.loading = false;
-                state.error = action.payload as AxiosError<any>;
+                state.error = action.payload as AxiosError<unknown>;
             })
     },
 });
 
 export const actLogout = () => {
-    return (dispatch: any) => {
+    return (dispatch: import("../../../store").AppDispatch) => {
         localStorage.removeItem("USER_ADMIN");
         dispatch(authSlice.actions.clearAuthState());
     }

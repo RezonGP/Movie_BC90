@@ -8,12 +8,12 @@ import { api } from "../../../services/api";
 export type InitState<T> = {
     loading: boolean;
     data: T | null;
-    error: AxiosError<any> | null;
+    error: AxiosError<unknown> | null;
 };
 
 export type MovieDetailState = {
     detail: TMovie | null;
-    schedule: any | null;
+    schedule: unknown | null;
 };
 
 export type CinemaSystem = {
@@ -43,6 +43,7 @@ export type TUser = {
     matKhau: string;
     email?: string;
     soDT?: string;
+    soDt?: string;
     maNhom?: string;
     hoTen?: string;
     maLoaiNguoiDung?: "QuanTri" | "KhachHang";
