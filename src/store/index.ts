@@ -5,7 +5,6 @@ import { authReducer } from "../pages/HomeTemplate/types";
 import cinnemaReducer from "../pages/HomeTemplate/Cinema/types/slice";
 
 
-
 export const store = configureStore({
     reducer: {
         bannerReducer,
