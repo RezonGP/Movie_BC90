@@ -16,7 +16,12 @@ export type MovieDetailState = {
     schedule: any | null;
 };
 
-
+export type CinemaSystem = {
+    maHeThongRap: string;
+    tenHeThongRap: string;
+    biDanh: string;
+    logo: string;
+};
 
 export type TMovie = {
     maPhim: number;
